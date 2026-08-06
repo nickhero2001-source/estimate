@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公益禮盒智慧估價中心｜新北市慈泰庇護工場</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --navy:#0e1f38;
+  --navy2:#1F3A5F;
+  --gold:#F6C65B;
+  --gold2:#e8a92a;
+  --cream:#fdf6e3;
+  --warm:#f7f0e0;
+  --text:#1a1a2e;
+  --muted:#5a5a7a;
+  --line:rgba(31,58,95,.14);
+  --ok:#2E7D32;
+  --warn:#B0451E;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC','PingFang TC',sans-serif;background:var(--warm);color:var(--text);line-height:1.7}
+h1,h2,h3,h4{font-family:'Noto Serif TC',serif;color:var(--navy2)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+
+/* ===== HEADER ===== */
+.top{
+  background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 100%);
+  color:#fff;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;box-shadow:0 4px 18px rgba(14,31,56,.25);
+  flex-wrap:wrap;gap:12px;
+}
+.top-brand{display:flex;align-items:center;gap:14px}
+.top-logo{
+  width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
+  display:flex;align-items:center;justify-content:center;font-family:'Noto Serif TC',serif;font-weight:700;color:var(--navy);font-size:18px;
+}
+.top-title{font-family:'Noto Serif TC',serif;font-size:19px;letter-spacing:.04em}
+.top-sub{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
+.top-badge{
+  font-size:11.5px;padding:7px 14px;border-radius:50px;border:1px solid rgba(246,198,91,.5);
+  color:var(--gold);letter-spacing:.05em;
+}
+
+.wrap{max-width:1280px;margin:0 auto;padding:32px 24px 100px;display:grid;grid-template-columns:1fr 380px;gap:28px}
+@media (max-width:980px){.wrap{grid-template-columns:1fr}}
+
+/* ===== INTRO ===== */
+.intro{background:#fff;border-radius:18px;padding:26px 28px;margin-bottom:26px;box-shadow:0 2px 12px rgba(14,31,56,.05);border-left:4px solid var(--gold2)}
+.intro h2{font-size:21px;margin-bottom:8px}
+.intro p{font-size:13.5px;color:var(--muted)}
+.intro .steps{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.intro .step{font-size:12px;background:var(--warm);padding:7px 13px;border-radius:50px;color:var(--navy2);font-weight:600}
+
+/* ===== MODE TOGGLE ===== */
+.mode-toggle{display:flex;gap:10px;margin-bottom:22px}
+.mode-btn{
+  flex:1;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:#fff;
+  text-align:left;transition:.2s;
+}
+.mode-btn strong{display:block;font-size:14.5px;color:var(--navy2);margin-bottom:3px}
+.mode-btn span{font-size:11.5px;color:var(--muted)}
+.mode-btn.active{border-color:var(--gold2);background:linear-gradient(135deg,rgba(246,198,91,.1),rgba(246,198,91,.03));box-shadow:0 4px 14px rgba(232,169,42,.15)}
+
+/* ===== SERIES / PRODUCTS ===== */
+.series{background:#fff;border-radius:18px;padding:24px 24px 8px;margin-bottom:20px;box-shadow:0 2px 12px rgba(14,31,56,.05)}
+.series-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.series-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.series-name{font-size:16.5px;font-weight:700;color:var(--navy2)}
+.series-note{font-size:12px;color:var(--muted);margin-top:2px}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;padding-bottom:20px}
+.pcard{border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:.2s}
+.pcard.qty-active{border-color:var(--gold2);background:linear-gradient(180deg,rgba(246,198,91,.06),transparent)}
+.pcard-tag{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--gold2);text-transform:uppercase}
+.pcard-name{font-size:14.5px;font-weight:700;color:var(--navy2);line-height:1.4;min-height:38px}
+.pcard-items{font-size:11.3px;color:var(--muted);list-style:none;line-height:1.7}
+.pcard-items li{padding-left:12px;position:relative}
+.pcard-items li::before{content:'·';position:absolute;left:0;color:var(--gold2);font-weight:700}
+.pcard-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:10px}
+.pcard-price{font-family:'Noto Serif TC',serif;font-weight:700;color:var(--gold2);font-size:16px}
+.pcard-orig{font-size:10.5px;color:var(--muted);text-decoration:line-through;margin-left:4px}
+.qty-box{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.qty-box button{background:var(--warm);border:none;width:26px;height:26px;font-size:14px;color:var(--navy2);font-weight:700}
+.qty-box button:hover{background:var(--gold)}
+.qty-box input{width:36px;border:none;text-align:center;font-size:13px;-moz-appearance:textfield}
+.qty-box input::-webkit-outer-spin-button,.qty-box input::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* ===== SIDEBAR ===== */
+.side{position:sticky;top:100px;align-self:start;display:flex;flex-direction:column;gap:16px}
+.panel{background:#fff;border-radius:18px;padding:22px;box-shadow:0 2px 12px rgba(14,31,56,.06)}
+.panel h3{font-size:15.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel h3 .n{width:22px;height:22px;border-radius:50%;background:var(--navy2);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'Noto Sans TC',sans-serif}
+
+.cart-empty{font-size:12.5px;color:var(--muted);text-align:center;padding:20px 0}
+.cart-line{display:flex;justify-content:space-between;font-size:12.5px;padding:7px 0;border-bottom:1px dashed var(--line);gap:8px}
+.cart-line .cl-name{color:var(--text);flex:1}
+.cart-line .cl-meta{color:var(--muted);font-size:11px}
+.cart-line .cl-amt{font-weight:700;color:var(--navy2);white-space:nowrap}
+
+.sum-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;color:var(--muted)}
+.sum-row.total{border-top:1.5px solid var(--navy2);margin-top:8px;padding-top:12px;font-size:17px;font-weight:700;color:var(--navy2)}
+.sum-row.total span:last-child{color:var(--gold2);font-family:'Noto Serif TC',serif}
+.badge-ok{display:inline-block;font-size:10.5px;background:rgba(46,125,50,.1);color:var(--ok);padding:3px 9px;border-radius:50px;font-weight:700;margin-left:6px}
+.badge-note{display:block;font-size:10.5px;color:var(--warn);margin-top:4px;line-height:1.5}
+
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--navy2);font-weight:600;margin-bottom:5px}
+.field input,.field select,.field textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);background:#fdfdfc;
+}
+.field textarea{resize:vertical;min-height:56px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:10.5px;color:var(--muted);margin-top:4px}
+
+.discount-row{display:flex;gap:8px;align-items:center}
+.discount-row select{flex:1}
+.discount-row input{width:70px;text-align:right}
+
+.btn{display:block;width:100%;text-align:center;padding:13px;border-radius:11px;border:none;font-weight:700;font-size:14px;letter-spacing:.03em;margin-top:8px;transition:.2s}
+.btn-gold{background:linear-gradient(135deg,#fff3d0,#f6c65b 50%,#e8a92a);color:var(--navy);box-shadow:0 3px 0 #9a6808,0 6px 16px rgba(246,198,91,.35)}
+.btn-gold:hover{transform:translateY(-1px)}
+.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-navy{background:var(--navy2);color:#fff}
+.btn-navy:hover{background:var(--navy)}
+.btn-navy:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--navy2)}
+
+.tier-ref{margin-top:8px;border:1px solid var(--line);border-radius:9px;overflow:hidden;display:none}
+.tier-ref.show{display:block}
+.tier-ref table{width:100%;border-collapse:collapse;font-size:11px}
+.tier-ref td{padding:6px 9px;border-bottom:1px solid var(--line)}
+.tier-ref tr:last-child td{border-bottom:none}
+.tier-ref td.t-range{color:var(--muted)}
+.tier-ref td.t-pct{text-align:right;font-weight:700;color:var(--gold2)}
+.tier-ref tr.active{background:rgba(246,198,91,.12)}
+.tier-ref tr.active td.t-pct{color:var(--ok)}
+
+.gas-toggle{font-size:11.5px;color:var(--navy2);text-decoration:underline;cursor:pointer;text-align:center;margin-top:10px;display:block}
+.gas-box{display:none;margin-top:10px}
+.gas-box.open{display:block}
+.gas-box textarea{width:100%;height:180px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;padding:10px;border-radius:9px;border:1px solid var(--line);background:#0e1f38;color:#c9f7c9}
+.gas-box p{font-size:11px;color:var(--muted);margin:8px 0}
+
+/* ===== QUOTE MODAL ===== */
+.modal-mask{display:none;position:fixed;inset:0;background:rgba(14,31,56,.75);z-index:200;align-items:flex-start;justify-content:center;padding:30px 16px;overflow:auto}
+.modal-mask.open{display:flex}
+.modal-shell{background:#f0f0f0;border-radius:12px;max-width:900px;width:100%;padding:20px}
+.modal-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal-bar h3{color:#fff;font-size:15px}
+.modal-actions{display:flex;gap:8px}
+.modal-actions button{padding:9px 16px;border-radius:8px;border:none;font-size:12.5px;font-weight:700}
+.modal-close{background:rgba(255,255,255,.15);color:#fff}
+
+/* ===== A4 QUOTE ===== */
+#quoteSheet{background:#fff;width:794px;min-height:1123px;margin:0 auto;padding:44px 50px;font-size:12px;color:#1a1a2e}
+.q-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0e1f38;padding-bottom:16px;margin-bottom:20px}
+.q-brand{display:flex;align-items:center;gap:12px}
+.q-logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#F6C65B,#e8a92a);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif TC',serif;font-weight:700;color:#0e1f38;font-size:19px}
+.q-brand-name{font-family:'Noto Serif TC',serif;font-size:17px;color:#0e1f38}
+.q-brand-sub{font-size:10.5px;color:#5a5a7a}
+.q-meta{text-align:right;font-size:11px;color:#5a5a7a}
+.q-meta b{color:#0e1f38;font-size:13px}
+.q-title{text-align:center;font-family:'Noto Serif TC',serif;font-size:20px;color:#0e1f38;letter-spacing:.15em;margin-bottom:18px}
+
+.q-info{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px;font-size:11.5px}
+.q-info-block{border:1px solid #ddd;border-radius:8px;padding:12px 14px}
+.q-info-block h4{font-size:11px;color:#e8a92a;margin-bottom:6px;letter-spacing:.05em}
+.q-info-block div{padding:2px 0}
+
+table.q-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11px}
+table.q-table th{background:#0e1f38;color:#fff;padding:8px 8px;text-align:left;font-weight:600}
+table.q-table td{padding:7px 8px;border-bottom:1px solid #e5e5e5}
+table.q-table td.num,table.q-table th.num{text-align:right}
+
+.q-totals{width:280px;margin-left:auto;font-size:12px;margin-bottom:18px}
+.q-totals .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #ddd}
+.q-totals .row.grand{border-top:2px solid #0e1f38;border-bottom:none;margin-top:4px;padding-top:8px;font-size:15px;font-weight:700;color:#0e1f38}
+
+.q-pay{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:18px}
+.q-box{border:1px solid #ddd;border-radius:8px;padding:12px 14px;font-size:10.8px}
+.q-box h4{font-size:11px;color:#e8a92a;margin-bottom:6px}
+.q-box li{margin-left:14px;margin-bottom:2px}
+.q-qr{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #ddd;border-radius:8px;padding:10px}
+.q-qr #qrcodeCanvas{margin-bottom:6px}
+.q-qr span{font-size:10px;color:#5a5a7a}
+
+.q-sign{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:26px}
+.q-sign-box{border-top:1.5px solid #999;padding-top:8px;font-size:11px;color:#5a5a7a}
+.q-sign-box .line{height:44px}
+
+.q-note{margin-top:20px;font-size:9.6px;color:#5a5a7a;border-top:1px solid #eee;padding-top:10px;line-height:1.7}
+.q-note b{color:#1F3A5F}
+.q-foot{margin-top:16px;text-align:center;font-size:9.5px;color:#999}
+
+@media (max-width:850px){
+  #quoteSheet{width:100%;padding:24px 18px}
+  .q-info,.q-pay,.q-sign{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-brand">
+    <div class="top-logo">TT</div>
+    <div>
+      <div class="top-title">公益禮盒智慧估價中心</div>
+      <div class="top-sub">TZU-TAI Bremen｜新北市慈泰庇護工場</div>
+    </div>
+  </div>
+  <div class="top-badge">試算工具・非正式訂單</div>
+</div>
+
+<div class="wrap">
+
+  <!-- LEFT: PRODUCTS -->
+  <div>
+    <div class="intro">
+      <h2>快速試算，取得正式估價單</h2>
+      <p>挑選您需要的禮盒與數量，系統會即時計算折扣、運費與總價；填寫聯絡資訊後即可下載 A4 估價單 PDF，或直接以 Email 寄送給客戶與慈泰庇護工場。<br>
+      <b>本工具僅提供試算與估價，正式訂購仍需回傳簽名／用印之估價單，或至官網完成流程。</b></p>
+      <div class="steps">
+        <span class="step">① 選擇商品</span>
+        <span class="step">② 系統試算</span>
+        <span class="step">③ 填寫聯絡資訊</span>
+        <span class="step">④ 下載 PDF</span>
+        <span class="step">⑤ Email 客戶與慈泰</span>
+      </div>
+    </div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeGeneral" onclick="setMode('general')">
+        <strong>🎁 一般採購 / 送禮試算</strong>
+        <span>單點寄送・依官網購物說明運費規則計算</span>
+      </button>
+      <button class="mode-btn" id="modeCorp" onclick="setMode('corp')">
+        <strong>🏢 企業大宗採購試算</strong>
+        <span>滿 NT$10,000 適用大宗優惠・依企業採購頁規則</span>
+      </button>
+    </div>
+
+    <div id="seriesContainer"></div>
+  </div>
+
+  <!-- RIGHT: SIDEBAR -->
+  <div class="side">
+
+    <div class="panel">
+      <h3><span class="n">1</span>估價明細</h3>
+      <div id="cartLines"><div class="cart-empty">尚未選擇商品，請於左側選擇禮盒與數量</div></div>
+
+      <div class="sum-row"><span>商品小計</span><span id="sumSubtotal">NT$ 0</span></div>
+
+      <div class="field" style="margin-top:10px">
+        <label>折扣（<span id="discountLabel">一般消費無自動折扣</span>）</label>
+        <div class="discount-row">
+          <select id="discountMode" onchange="renderCart()">
+            <option value="auto">依訂購金額自動套用大宗優惠級距</option>
+            <option value="0">不套用折扣</option>
+            <option value="pct">依折扣％計算（手動）</option>
+            <option value="amt">依折扣金額計算（手動）</option>
+          </select>
+          <input type="number" id="discountValue" value="0" min="0" oninput="renderCart()" style="display:none">
+        </div>
+        <div class="hint" id="discountHint"></div>
+        <div class="tier-ref" id="tierRef"></div>
+      </div>
+
+      <div class="sum-row"><span>折扣金額</span><span id="sumDiscount">- NT$ 0</span></div>
+
+      <div class="field" id="multiPointField" style="display:none;margin-top:4px">
+        <label>配送地點數量（分點配送）</label>
+        <input type="number" id="cPoints" value="2" min="2" oninput="renderCart()">
+        <div class="hint">多點配送以箱數計算運費，以下為每點 NT$180 之粗估參考值，實際箱數與運費請與業務確認。</div>
+      </div>
+
+      <div class="sum-row"><span>運費<span id="shipBadge"></span></span><span id="sumShip">NT$ 0</span></div>
+      <div class="badge-note" id="shipNote"></div>
+      <div class="sum-row total"><span>估價總金額</span><span id="sumTotal">NT$ 0</span></div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="n">2</span>聯絡與配送資訊</h3>
+      <div class="field-row">
+        <div class="field"><label>客戶/公司名稱 *</label><input id="cName" placeholder="王小姐 / ○○股份有限公司"></div>
+        <div class="field"><label>統一編號</label><input id="cTax" placeholder="企業採購可留空"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>聯絡人姓名 *</label><input id="cContact" placeholder="聯絡人"></div>
+        <div class="field"><label>聯絡電話 *</label><input id="cPhone" placeholder="09xx-xxx-xxx"></div>
+      </div>
+      <div class="field"><label>Email（估價單將寄送至此） *</label><input id="cEmail" type="email" placeholder="name@example.com"></div>
+      <div class="field-row">
+        <div class="field"><label>希望到貨日</label><input id="cDate" type="date"></div>
+        <div class="field"><label>配送方式</label>
+          <select id="cShipType" onchange="renderCart()">
+            <option value="single">本島單點配送</option>
+            <option value="multi">本島分點配送（多地址）</option>
+            <option value="remote">離島 / 海外</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>配送地址 / 分點配送備註</label><textarea id="cAddr" placeholder="請填寫收件地址；分點配送請列出各收件人、電話、地址與數量"></textarea></div>
+      <div class="field"><label>小卡 / 客製需求</label>
+        <select id="cCard">
+          <option value="none">不需要小卡</option>
+          <option value="standard">公版小卡（每張 NT$4，最低印製 100 張，祝福文字 40 字內）</option>
+          <option value="own">自行提供賀卡（免費放入）</option>
+          <option value="custom">客製化設計（腰封／賀卡／燙金／LOGO 印製，另行報價）</option>
+        </select>
+      </div>
+      <div class="field"><label>備註</label><textarea id="cNote" placeholder="用途、預算彈性、其他需求…"></textarea></div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="n">3</span>產生估價單</h3>
+      <button class="btn btn-gold" id="btnGenerate" onclick="openQuote()">產生 A4 估價單</button>
+      <button class="btn btn-navy" id="btnPDF" onclick="downloadPDF()" disabled>下載估價單 PDF</button>
+      <button class="btn btn-ghost" id="btnEmail" onclick="emailQuote()" disabled>Email 給客戶與慈泰工場</button>
+      <span class="gas-toggle" onclick="toggleGas()">▾ 後台需求：Google表單／試算表自動記錄（工程對接說明）</span>
+      <div class="gas-box" id="gasBox">
+        <p>依規格書「後台」需求，正式估價送出時應同步寫入 Google Sheet 並通知業務。因本頁為純前端試算工具，實際寄信與寫入 Sheet 需部署下列 Google Apps Script 為 Web App，並將其網址填入頁面上方常數 <code>GAS_ENDPOINT</code>。</p>
+        <textarea readonly id="gasScript"></textarea>
+        <p>部署後，「Email 給客戶與慈泰工場」按鈕會改為呼叫此 Web App，自動寫入試算表（估價編號、日期、公司、聯絡人、Email、電話、金額、狀態）並寄送通知信；目前先以 mailto 開啟本機郵件軟體讓您手動送出。</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- QUOTE MODAL -->
+<div class="modal-mask" id="quoteModal">
+  <div class="modal-shell">
+    <div class="modal-bar">
+      <h3>估價單預覽</h3>
+      <div class="modal-actions">
+        <button class="btn-navy" onclick="downloadPDF()" style="color:#fff">下載 PDF</button>
+        <button class="modal-close" onclick="closeQuote()">關閉</button>
+      </div>
+    </div>
+    <div id="quoteSheet"></div>
+  </div>
+</div>
+
+<script>
+/* ============ CONFIG ============ */
+const GAS_ENDPOINT = ""; // 部署 Google Apps Script Web App 後，將網址填入此處
+const BRAND = {
+  name: "TZU-TAI Bremen 新北市慈泰庇護工場",
+  org: "財團法人心路社會福利基金會",
+  phoneTaipei: "(02)2290-0185",
+  phoneShop: "02-2290-0959",
+  emailNotify: "2015035@ms.syinlu.org.tw",
+  emailBiz: "2015058@ms.syinlu.org.tw",
+  site: "https://eshop.syinlu.org.tw/main/visit/Bulk-purchase"
+};
+
+/* ============ PRODUCT DATA (取自 Index(51) 一頁式網站商品內容) ============ */
+const SERIES = [
+  {
+    icon:"🌕", name:"花好月圓．伴（中秋限定）", note:"攜手日禾春．可提式禮盒．數量有限",
+    items:[
+      {id:"p01", name:"花好月圓．伴（單盒款）", tag:"中秋限定・單盒款", price:435, orig:460, items:["蛋黃酥 2入","手工餅乾 5入","短支蛋捲 4入"]},
+      {id:"p02", name:"花好月圓．伴（綜合大款）", tag:"中秋限定・綜合大款", price:835, orig:880, items:["蛋黃酥 2入","手工餅乾 12入","長支蛋捲 2入","短支蛋捲 4入","米葉果果 5入"]},
+    ]
+  },
+  {
+    icon:"🎶", name:"星空下的不來梅樂手・週年紀念鐵盒", note:"鐵盒典藏，星光設計，珍貴收藏款（口味固定無法挑選）",
+    items:[
+      {id:"p03", name:"星空不來梅・綜果款", tag:"鐵盒・單層", price:420, items:["鳳茶酥 2顆（濃茶金萱、伯爵紅烏龍各1）","米葉果果 4片（蜂蜜伯爵、微辣起司各2）","餅乾 5片（蜜香紅茶2、金萱3）"]},
+      {id:"p04", name:"星空不來梅・雙層綜果款", tag:"鐵盒・雙層", price:820, items:["上層：芝麻短蛋捲7入、餅乾5片","下層：鳳茶酥2顆、米葉果果4片、餅乾5片（5口味各1）"]},
+      {id:"p05", name:"星空不來梅・餅乾＋鳳茶酥", tag:"鐵盒・單層・吃茶款", price:420, items:["鳳茶酥 4顆（濃茶金萱、伯爵紅烏龍各2）","餅乾 6片（蜜香紅茶、金萱各3）"]},
+    ]
+  },
+  {
+    icon:"🌙", name:"美好時光・Lovely Time", note:"美好的事物 獻給美好的你",
+    items:[
+      {id:"p06", name:"美好時光・單層提盒餅乾蛋捲", tag:"單層提盒", price:399, items:["餅乾 16片（4種口味）","長蛋捲 2支（芝麻、咖啡各1）"]},
+    ]
+  },
+  {
+    icon:"🌸", name:"Yumthé 花獻禮盒", note:"滿版花卉插畫，附贈玫瑰舒緩茶",
+    items:[
+      {id:"p07", name:"Yumthé 花獻・餅乾款", tag:"花獻・餅乾款", price:890, orig:990, items:["手工餅乾 21片（4種口味×4+1種口味×5）","玫瑰舒緩茶 1盒（3入茶包）"]},
+      {id:"p08", name:"Yumthé 花獻・餅乾蛋捲款", tag:"花獻・餅乾蛋捲款", price:890, orig:990, items:["手工餅乾 13片","長蛋捲 6支（芝麻、咖啡各3）","玫瑰舒緩茶 1盒（3入茶包）"]},
+    ]
+  },
+  {
+    icon:"🎼", name:"幸福樂章・小協奏禮盒", note:"可提式紙製禮盒，輕巧好攜帶",
+    items:[
+      {id:"p09", name:"小協奏禮盒・餅乾款", tag:"小協奏・餅乾款", price:350, items:["餅乾 16片（8種口味）","可提式紙製禮盒"]},
+      {id:"p10", name:"小協奏禮盒・餅乾蛋捲款", tag:"小協奏・餅乾蛋捲款", price:360, items:["餅乾 8片（4種口味）","短蛋捲 9支（芝麻／咖啡）","可提式紙製禮盒"]},
+    ]
+  },
+  {
+    icon:"🧩", name:"幸福花磚・捲毛力卡聯名禮盒", note:"紙盒包裝附提袋，雙層／三層可選",
+    items:[
+      {id:"p11", name:"幸福花磚・綜合款雙層", tag:"聯名・雙層・綜合款", price:699, items:["上層：短蛋捲10支、桂花烏龍茶1袋","下層：餅乾8片、原味土鳳梨酥2顆、柚香金萱土鳳梨酥1顆"]},
+      {id:"p12", name:"幸福花磚・餅乾款雙層", tag:"聯名・雙層・餅乾款", price:699, items:["上層：短蛋捲10支、桂花烏龍茶1袋","下層：餅乾16片（4口味）"]},
+      {id:"p13", name:"幸福花磚・綜合款三層", tag:"聯名・三層・綜合款", price:940, items:["上層：短蛋捲10支、茶1袋","中層：餅乾8片、鳳梨酥3顆","下層：餅乾16片（4口味）"]},
+    ]
+  },
+  {
+    icon:"🌳", name:"Happy Together・麵包樹聯名禮盒", note:"療癒插畫，多種組合滿足不同需求",
+    items:[
+      {id:"p14", name:"Happy Together・蛋捲餅乾款", tag:"麵包樹・蛋捲餅乾款", price:600, items:["餅乾綜合 12片（6口味）","短蛋捲 16支（芝麻、咖啡各8）"]},
+      {id:"p15", name:"Happy Together・綜合款", tag:"麵包樹・綜合款", price:599, items:["餅乾 12片（6口味）","短蛋捲 8支","土鳳梨酥 4顆（原味、布朗尼各2）"]},
+      {id:"p16", name:"Happy Together・8入土鳳梨酥", tag:"麵包樹・8入鳳梨酥款", price:590, items:["餅乾 12片（6口味）","土鳳梨酥 8顆（原味4、布朗尼4）"]},
+      {id:"p17", name:"一起幸福吧・麵包樹聯名", tag:"麵包樹・一起幸福吧", price:420, items:["餅乾 10片（5口味）","長蛋捲 6支（芝麻、咖啡各3）"]},
+    ]
+  },
+  {
+    icon:"💭", name:"美好夢想・許匡匡聯名禮盒", note:"夢幻水藍插畫包裝，多款組合",
+    items:[
+      {id:"p18", name:"美好夢想・A款", tag:"許匡匡・A款", price:560, items:["餅乾 16片（4口味各4）","土鳳梨酥 6顆（原味×3、柚香金萱×3）"]},
+      {id:"p19", name:"美好夢想・B款", tag:"許匡匡・B款", price:590, items:["綜合餅乾 8片","土鳳梨酥 6顆","長蛋捲 6支（芝麻、咖啡各3）"]},
+      {id:"p20", name:"美好夢想・C款", tag:"許匡匡・C款", price:630, items:["綜合餅乾 16片（4口味）","長蛋捲 10支（芝麻、咖啡各5）"]},
+      {id:"p21", name:"美好夢想S・餅乾蛋捲組", tag:"許匡匡・S款", price:450, items:["餅乾 15片（5口味）","短蛋捲 9支（芝麻5、咖啡4）"]},
+    ]
+  },
+];
+
+let mode = "general"; // general | corp
+const cart = {}; // id -> qty
+
+/* ============ 大宗採購優惠級距（企業採購頁確認版本） ============ */
+const DISCOUNT_TIERS = [
+  { min:100000, max:Infinity, pct:12, label:"訂購滿 $100,000 以上" },
+  { min:70000,  max:100000,   pct:10, label:"訂購滿 $70,000 - 100,000" },
+  { min:40000,  max:70000,    pct:8,  label:"訂購滿 $40,000 - 70,000" },
+  { min:20000,  max:40000,    pct:5,  label:"訂購滿 $20,000 - 40,000" },
+  { min:10000,  max:20000,    pct:2,  label:"訂購滿 $10,000 - 20,000" },
+];
+function tierFor(subtotal){
+  return DISCOUNT_TIERS.find(t => subtotal >= t.min && subtotal < t.max) || null;
+}
+const SHIP_FREE_THRESHOLD = { general: 2000, corp: 8000 };
+const SHIP_FLAT = 180;
+
+/* ============ RENDER PRODUCT GRID ============ */
+function renderSeries(){
+  const c = document.getElementById("seriesContainer");
+  c.innerHTML = SERIES.map(s => `
+    <div class="series">
+      <div class="series-head">
+        <div class="series-icon">${s.icon}</div>
+        <div><div class="series-name">${s.name}</div><div class="series-note">${s.note}</div></div>
+      </div>
+      <div class="pgrid">
+        ${s.items.map(p => `
+          <div class="pcard" id="card-${p.id}">
+            <span class="pcard-tag">${p.tag}</span>
+            <div class="pcard-name">${p.name}</div>
+            <ul class="pcard-items">${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+            <div class="pcard-foot">
+              <div>
+                <span class="pcard-price">$${p.price}</span>
+                ${p.orig ? `<span class="pcard-orig">原價 $${p.orig}</span>` : ""}
+              </div>
+              <div class="qty-box">
+                <button onclick="changeQty('${p.id}',-1)">−</button>
+                <input type="number" min="0" id="qty-${p.id}" value="0" oninput="setQty('${p.id}', this.value)">
+                <button onclick="changeQty('${p.id}',1)">＋</button>
+              </div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+}
+
+function findProduct(id){
+  for(const s of SERIES){ const f = s.items.find(p=>p.id===id); if(f) return f; }
+  return null;
+}
+
+function changeQty(id, delta){
+  const cur = cart[id] || 0;
+  setQty(id, Math.max(0, cur + delta));
+}
+function setQty(id, val){
+  const n = Math.max(0, parseInt(val)||0);
+  if(n>0) cart[id]=n; else delete cart[id];
+  document.getElementById(`qty-${id}`).value = n;
+  document.getElementById(`card-${id}`).classList.toggle("qty-active", n>0);
+  renderCart();
+}
+
+/* ============ MODE ============ */
+function setMode(m){
+  mode = m;
+  document.getElementById("modeGeneral").classList.toggle("active", m==="general");
+  document.getElementById("modeCorp").classList.toggle("active", m==="corp");
+  document.getElementById("discountLabel").textContent = m==="corp"
+    ? "依訂購金額自動套用大宗優惠級距"
+    : "一般消費無自動折扣";
+  const dModeSel = document.getElementById("discountMode");
+  dModeSel.value = m==="corp" ? "auto" : "0";
+  document.getElementById("tierRef").classList.toggle("show", m==="corp");
+  renderCart();
+}
+
+/* ============ CART / TOTALS ============ */
+function renderCart(){
+  const lines = Object.entries(cart);
+  const linesBox = document.getElementById("cartLines");
+  if(lines.length===0){
+    linesBox.innerHTML = `<div class="cart-empty">尚未選擇商品，請於左側選擇禮盒與數量</div>`;
+  } else {
+    linesBox.innerHTML = lines.map(([id,qty])=>{
+      const p = findProduct(id);
+      return `<div class="cart-line">
+        <div>
+          <div class="cl-name">${p.name}</div>
+          <div class="cl-meta">$${p.price} × ${qty}</div>
+        </div>
+        <div class="cl-amt">NT$ ${(p.price*qty).toLocaleString()}</div>
+      </div>`;
+    }).join("");
+  }
+
+  const subtotal = lines.reduce((s,[id,qty])=> s + findProduct(id).price*qty, 0);
+  document.getElementById("sumSubtotal").textContent = `NT$ ${subtotal.toLocaleString()}`;
+
+  // discount
+  const dMode = document.getElementById("discountMode").value;
+  const dValInput = document.getElementById("discountValue");
+  dValInput.style.display = (dMode==="pct" || dMode==="amt") ? "block" : "none";
+  const dVal = parseFloat(dValInput.value)||0;
+  let discount = 0;
+  let tier = null;
+  const hint = document.getElementById("discountHint");
+
+  if(dMode==="auto"){
+    tier = tierFor(subtotal);
+    if(tier){ discount = Math.round(subtotal * tier.pct/100); }
+    if(mode!=="corp"){
+      hint.textContent = `大宗優惠級距僅適用企業大宗採購，請先切換上方「企業大宗採購試算」模式。`;
+    } else if(tier){
+      hint.innerHTML = `✓ ${tier.label} <span class="badge-ok">自動套用 ${100-tier.pct}折</span>`;
+    } else {
+      hint.textContent = `訂購金額未滿 NT$10,000，尚未達大宗優惠門檻，目前不套用折扣。`;
+    }
+  } else if(dMode==="pct"){
+    discount = Math.round(subtotal * dVal/100);
+    hint.textContent = `手動套用折扣 ${dVal}%。`;
+  } else if(dMode==="amt"){
+    discount = Math.round(dVal);
+    hint.textContent = `手動套用折扣金額 NT$${dVal.toLocaleString()}。`;
+  } else {
+    hint.textContent = mode==="corp"
+      ? `未套用折扣。企業大宗採購滿 NT$10,000 可改選「自動套用大宗優惠級距」。`
+      : `一般消費依官網定價計算，無自動折扣；如為企業大宗採購請切換上方模式。`;
+  }
+  discount = Math.min(discount, subtotal);
+  document.getElementById("sumDiscount").textContent = `- NT$ ${discount.toLocaleString()}`;
+
+  // tier reference table highlight
+  renderTierRef(subtotal);
+
+  // shipping
+  const afterDiscount = subtotal - discount;
+  const shipType = document.getElementById("cShipType").value;
+  document.getElementById("multiPointField").style.display = shipType==="multi" ? "block" : "none";
+  let ship = 0, shipNote = "";
+  const shipBadge = document.getElementById("shipBadge");
+  shipBadge.textContent = "";
+  const freeThreshold = SHIP_FREE_THRESHOLD[mode];
+
+  if(shipType==="remote"){
+    ship = 0;
+    shipNote = "離島 / 海外不適用免運優惠，運費需另計，將由業務確認金額後另行告知，未列入本估價總額。";
+  } else if(shipType==="multi"){
+    const points = Math.max(2, parseInt(document.getElementById("cPoints").value)||2);
+    ship = points * SHIP_FLAT;
+    shipNote = `多點配送以箱數計算運費，此為每個配送點 NT$${SHIP_FLAT} × ${points} 點之粗估值（尚未扣除各點如達免運門檻之減免），實際箱數與運費請與業務確認。`;
+  } else {
+    // single destination
+    if(lines.length>0 && afterDiscount >= freeThreshold){
+      ship = 0;
+      shipBadge.innerHTML = `<span class="badge-ok">已達免運門檻</span>`;
+      shipNote = mode==="corp"
+        ? `企業大宗採購單一地點滿 NT$${freeThreshold.toLocaleString()} 免運費。`
+        : `常溫商品單筆消費滿 NT$${freeThreshold.toLocaleString()} 免運（依官網購物說明規則）。`;
+    } else if(lines.length>0){
+      ship = SHIP_FLAT;
+      shipNote = mode==="corp"
+        ? `單一地點未滿 NT$${freeThreshold.toLocaleString()}，酌收運費 NT$${SHIP_FLAT}。`
+        : `常溫商品未滿 NT$${freeThreshold.toLocaleString()}，酌收運費 NT$${SHIP_FLAT}（依官網購物說明規則）。`;
+    } else {
+      shipNote = "";
+    }
+  }
+  document.getElementById("sumShip").textContent = `NT$ ${ship.toLocaleString()}`;
+  document.getElementById("shipNote").textContent = shipNote;
+
+  const total = afterDiscount + ship;
+  document.getElementById("sumTotal").textContent = `NT$ ${total.toLocaleString()}`;
+
+  // enable generate button
+  document.getElementById("btnGenerate").disabled = lines.length===0;
+
+  return {lines, subtotal, discount, ship, total, dMode, dVal, tier};
+}
+
+function renderTierRef(subtotal){
+  const box = document.getElementById("tierRef");
+  const ordered = [...DISCOUNT_TIERS].sort((a,b)=>a.min-b.min);
+  box.innerHTML = `<table>${ordered.map(t=>{
+    const active = subtotal>=t.min && subtotal<t.max;
+    const foldedPct = 100-t.pct;
+    return `<tr class="${active?'active':''}"><td class="t-range">${t.label}</td><td class="t-pct">${foldedPct}折</td></tr>`;
+  }).join("")}</table>`;
+}
+
+/* ============ QUOTE NUMBER ============ */
+function genQuoteNo(){
+  const d = new Date();
+  const y = d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
+  const rand = Math.floor(1000+Math.random()*9000);
+  return `TT-${y}${m}${day}-${rand}`;
+}
+
+let currentQuoteNo = "";
+
+/* ============ BUILD & OPEN QUOTE ============ */
+function openQuote(){
+  const name = document.getElementById("cName").value.trim();
+  const contact = document.getElementById("cContact").value.trim();
+  const phone = document.getElementById("cPhone").value.trim();
+  const email = document.getElementById("cEmail").value.trim();
+  if(!name || !contact || !phone || !email){
+    alert("請填寫客戶/公司名稱、聯絡人、聯絡電話與 Email，以利產生正式估價單。");
+    return;
+  }
+  const {lines, subtotal, discount, ship, total, dMode, dVal, tier} = renderCart();
+  currentQuoteNo = genQuoteNo();
+  const today = new Date().toLocaleDateString("zh-TW");
+  const tax = document.getElementById("cTax").value.trim() || "－";
+  const date = document.getElementById("cDate").value || "另行約定";
+  const shipType = document.getElementById("cShipType").selectedOptions[0].text;
+  const addr = document.getElementById("cAddr").value.trim() || "－";
+  const card = document.getElementById("cCard").selectedOptions[0].text;
+  const note = document.getElementById("cNote").value.trim();
+
+  const rows = lines.map(([id,qty])=>{
+    const p = findProduct(id);
+    return `<tr><td>${p.name}</td><td class="num">$${p.price}</td><td class="num">${qty}</td><td class="num">$${(p.price*qty).toLocaleString()}</td></tr>`;
+  }).join("");
+
+  let discountLabel = "未套用折扣";
+  if(dMode==="auto" && tier) discountLabel = `${tier.label}・自動套用 ${100-tier.pct}折`;
+  else if(dMode==="auto") discountLabel = "未達大宗優惠門檻（NT$10,000）";
+  if(dMode==="pct") discountLabel = `手動折扣 ${dVal}%`;
+  if(dMode==="amt") discountLabel = `手動折扣金額 NT$${dVal.toLocaleString()}`;
+
+  const shipType2 = document.getElementById("cShipType").value;
+  const freeThreshold2 = SHIP_FREE_THRESHOLD[mode];
+  let shipCellText = "";
+  if(shipType2==="remote") shipCellText = "另計（離島／海外）";
+  else if(shipType2==="multi") shipCellText = `NT$ ${ship.toLocaleString()}（估算，以箱數計算為準）`;
+  else shipCellText = ship>0 ? `NT$ ${ship.toLocaleString()}` : `免運（單一地點滿 NT$${freeThreshold2.toLocaleString()}）`;
+
+  document.getElementById("quoteSheet").innerHTML = `
+    <div class="q-head">
+      <div class="q-brand">
+        <div class="q-logo">TT</div>
+        <div><div class="q-brand-name">${BRAND.name}</div><div class="q-brand-sub">${BRAND.org}</div></div>
+      </div>
+      <div class="q-meta">
+        估價編號　<b>${currentQuoteNo}</b><br>
+        製單日期　${today}
+      </div>
+    </div>
+    <div class="q-title">禮 盒 估 價 單</div>
+
+    <div class="q-info">
+      <div class="q-info-block">
+        <h4>客戶資訊</h4>
+        <div>客戶／公司：${name}</div>
+        <div>統一編號：${tax}</div>
+        <div>聯絡人：${contact}　電話：${phone}</div>
+        <div>Email：${email}</div>
+      </div>
+      <div class="q-info-block">
+        <h4>配送資訊</h4>
+        <div>配送方式：${shipType}</div>
+        <div>希望到貨日：${date}</div>
+        <div>配送地址／備註：${addr}</div>
+        <div>小卡／客製：${card}</div>
+      </div>
+    </div>
+
+    <table class="q-table">
+      <thead><tr><th>品項</th><th class="num">單價</th><th class="num">數量</th><th class="num">小計</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+
+    <div class="q-totals">
+      <div class="row"><span>商品小計</span><span>NT$ ${subtotal.toLocaleString()}</span></div>
+      <div class="row"><span>折扣（${discountLabel}）</span><span>- NT$ ${discount.toLocaleString()}</span></div>
+      <div class="row"><span>運費</span><span>${shipCellText}</span></div>
+      <div class="row grand"><span>估價總金額</span><span>NT$ ${total.toLocaleString()}</span></div>
+    </div>
+
+    <div class="q-pay">
+      <div class="q-box">
+        <h4>付款資訊</h4>
+        <ul>
+          <li>付款方式：銀行轉帳、匯款及刷卡（一般消費另提供 ATM 轉帳）。</li>
+          <li>企業採購請於貨到前 14 天內支付全額，如需固定出帳日請與專員討論。</li>
+          <li>全面採用電子發票，將於出貨同時寄至客戶 Email。</li>
+          <li>本估價單為初步試算金額，正式報價將於確認品項後 3 個工作天內以 Email 提供。</li>
+        </ul>
+      </div>
+      <div class="q-qr">
+        <div id="qrcodeCanvas"></div>
+        <span>掃碼聯繫慈泰工場</span>
+      </div>
+    </div>
+
+    <div class="q-sign">
+      <div class="q-sign-box"><div class="line"></div>客戶簽名／用印（確認訂購）</div>
+      <div class="q-sign-box"><div class="line"></div>新北市慈泰庇護工場　電子章</div>
+    </div>
+
+    ${note ? `<div class="q-note"><b>備註：</b>${note}</div>` : ""}
+
+    <div class="q-note">
+      <b>注意事項（摘自官網訂購／企業採購規則，完整內容請參考 ${BRAND.site}）：</b><br>
+      1. 本單為試算估價，非正式訂單成立依據；請簽名或用印回傳本估價單，或依官網流程完成正式訂購。<br>
+      2. 大宗採購優惠級距：滿 $10,000-20,000 享98折、$20,000-40,000 享95折、$40,000-70,000 享92折、$70,000-100,000 享9折、$100,000 以上享88折；客製化最低訂購數量為 1,000 份。<br>
+      3. 建議下訂時間：一般採購請於到貨日前 1 個月完成下訂，客製採購請提前 4 個月；最後數量調整以 20 盒內為限。<br>
+      4. 運費優惠：單一地點滿 NT$8,000（企業大宗）或 NT$2,000（一般消費，常溫商品）免運費；未滿酌收運費 NT$180／配送點；多點配送以箱數計算運費；離島與海外不適用免運，運費另計。<br>
+      5. 保存期限（到貨後）：蛋捲 45 天以上、餅乾／土鳳梨酥／米葉果果 15 天以上，請留意收貨後盡早享用。<br>
+      6. 商品到貨後請於拆封、開箱過程全程錄影，如有短缺、瑕疵或毀損，請於到貨後 1 日內聯繫並提供完整錄影檔。<br>
+      7. 運送過程可能因搬運造成產品位置移動或輕微碎裂，此屬正常情形，不影響食用安全，恕無法作為退換貨依據。
+    </div>
+
+    <div class="q-foot">${BRAND.org}（統編 00968326）｜台北 ${BRAND.phoneTaipei}｜商品信箱 ${BRAND.emailNotify}｜企業採購 ${BRAND.emailBiz}</div>
+  `;
+
+  document.getElementById("quoteModal").classList.add("open");
+  document.getElementById("btnPDF").disabled = false;
+  document.getElementById("btnEmail").disabled = false;
+
+  // QR code
+  setTimeout(()=>{
+    const qEl = document.getElementById("qrcodeCanvas");
+    if(qEl && window.QRCode){
+      qEl.innerHTML = "";
+      new QRCode(qEl, { text: "https://eshop.syinlu.org.tw/main/visit/Bulk-purchase", width:76, height:76, colorDark:"#0e1f38", colorLight:"#ffffff" });
+    }
+  }, 30);
+}
+
+function closeQuote(){ document.getElementById("quoteModal").classList.remove("open"); }
+
+/* ============ PDF EXPORT ============ */
+function downloadPDF(){
+  const el = document.getElementById("quoteSheet");
+  if(!el || !el.innerHTML.trim()){
+    alert("請先點選「產生 A4 估價單」，系統會先產生報價內容後才能匯出 PDF。");
+    return;
+  }
+
+  // 若預覽視窗目前是關閉狀態，先暫時打開它 — html2canvas 無法擷取 display:none 內的內容，
+  // 這是先前「下載出來是空白 PDF」的主因（使用者關閉預覽後直接按側欄的下載按鈕）。
+  const modal = document.getElementById("quoteModal");
+  const wasOpen = modal.classList.contains("open");
+  if(!wasOpen) modal.classList.add("open");
+
+  const opt = {
+    margin: 0,
+    filename: `估價單_${currentQuoteNo || genQuoteNo()}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS:true, backgroundColor:"#ffffff" },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // 給瀏覽器一個 repaint 的機會，確保剛切換為顯示狀態的內容已經完成排版，避免擷取到還未繪製完成的畫面
+  requestAnimationFrame(()=>{
+    setTimeout(()=>{
+      html2pdf().set(opt).from(el).save().finally(()=>{
+        if(!wasOpen) modal.classList.remove("open");
+      });
+    }, 60);
+  });
+}
+
+/* ============ EMAIL (mailto fallback / GAS ready) ============ */
+async function emailQuote(){
+  const email = document.getElementById("cEmail").value.trim();
+  const name = document.getElementById("cName").value.trim();
+  const total = document.getElementById("sumTotal").textContent;
+
+  if(GAS_ENDPOINT){
+    try{
+      const payload = {
+        quoteNo: currentQuoteNo, date: new Date().toISOString(),
+        company: name, contact: document.getElementById("cContact").value,
+        email, phone: document.getElementById("cPhone").value,
+        amount: total, status: "待確認"
+      };
+      await fetch(GAS_ENDPOINT, {method:"POST", mode:"no-cors", body: JSON.stringify(payload)});
+      alert("已送出估價紀錄，系統將自動寄送估價單並記錄於 Google Sheet。");
+      return;
+    }catch(e){ /* fall through to mailto */ }
+  }
+
+  const subject = encodeURIComponent(`【估價單 ${currentQuoteNo}】${name} - 公益禮盒估價`);
+  const body = encodeURIComponent(
+`您好，
+
+附上本次禮盒估價資訊：
+估價編號：${currentQuoteNo}
+客戶／公司：${name}
+估價總金額：${total}
+
+（請下載並附上剛才產生的 PDF 估價單一併寄出）
+
+新北市慈泰庇護工場 敬上`);
+  const to = [email, BRAND.emailNotify].filter(Boolean).join(",");
+  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+}
+
+/* ============ GAS SCRIPT (説明用，供工程對接) ============ */
+document.getElementById("gasScript").value =
+`/**
+ * Google Apps Script - 部署為 Web App，可接收前端 POST 並寫入 Google Sheet + 寄送通知信
+ * 對應規格書「五、後台」：Google Form + Google Sheet
+ * 欄位：估價編號、日期、公司、聯絡人、Email、電話、金額、狀態
+ */
+function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("估價紀錄");
+  const data = JSON.parse(e.postData.contents);
+
+  sheet.appendRow([
+    data.quoteNo, data.date, data.company, data.contact,
+    data.email, data.phone, data.amount, data.status || "待確認"
+  ]);
+
+  // 通知客戶與慈泰工場
+  const notifyEmail = "2015035@ms.syinlu.org.tw";
+  MailApp.sendEmail({
+    to: data.email + "," + notifyEmail,
+    subject: "【估價單 " + data.quoteNo + "】" + data.company + " - 公益禮盒估價",
+    body: "估價編號：" + data.quoteNo + "\\n金額：" + data.amount +
+          "\\n\\n本信件為系統自動通知，正式估價單請見附件或稍後由專員回覆。"
+  });
+
+  return ContentService.createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+function toggleGas(){
+  document.getElementById("gasBox").classList.toggle("open");
+}
+
+/* ============ INIT ============ */
+renderSeries();
+setMode("general");
+document.getElementById("cShipType").addEventListener("change", renderCart);
+</script>
+</body>
+</html>
