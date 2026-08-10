@@ -39,7 +39,9 @@ input,select,textarea{font-family:inherit}
 .top-logo{
   width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
   display:flex;align-items:center;justify-content:center;font-family:'Noto Serif TC',serif;font-weight:700;color:var(--navy);font-size:18px;
+  overflow:hidden;
 }
+.top-logo img{width:100%;height:100%;object-fit:contain;padding:5px;background:#fff}
 .top-title{font-family:'Noto Serif TC',serif;font-size:19px;letter-spacing:.04em}
 .top-sub{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
 .top-badge{
@@ -51,11 +53,19 @@ input,select,textarea{font-family:inherit}
 @media (max-width:980px){.wrap{grid-template-columns:1fr}}
 
 /* ===== INTRO ===== */
-.intro{background:#fff;border-radius:18px;padding:26px 28px;margin-bottom:26px;box-shadow:0 2px 12px rgba(14,31,56,.05);border-left:4px solid var(--gold2)}
-.intro h2{font-size:21px;margin-bottom:8px}
-.intro p{font-size:13.5px;color:var(--muted)}
+.intro{background:#fff;border-radius:18px;overflow:hidden;margin-bottom:26px;box-shadow:0 2px 12px rgba(14,31,56,.05)}
+.intro-hero{position:relative;min-height:120px;background-size:cover;background-position:center;background-color:var(--navy2);display:flex;align-items:center;padding:22px 28px}
+.intro-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(14,31,56,.88) 0%,rgba(31,58,95,.72) 55%,rgba(31,58,95,.35) 100%)}
+.intro-hero-content{position:relative;z-index:1;color:#fff}
+.intro-hero-content h2{color:#fff;font-size:21px;margin-bottom:6px}
+.intro-hero-content p{font-size:12.5px;color:rgba(255,255,255,.82)}
+.intro-mascots{position:absolute;right:18px;bottom:-6px;display:flex;gap:4px;z-index:1}
+.intro-mascots img{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}
+.intro-body{padding:20px 28px 26px;border-left:4px solid var(--gold2);border-radius:0 0 18px 18px}
+.intro-body p{font-size:13.5px;color:var(--muted)}
 .intro .steps{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 .intro .step{font-size:12px;background:var(--warm);padding:7px 13px;border-radius:50px;color:var(--navy2);font-weight:600}
+@media (max-width:560px){.intro-mascots{display:none}}
 
 /* ===== MODE TOGGLE ===== */
 .mode-toggle{display:flex;gap:10px;margin-bottom:22px}
@@ -74,15 +84,25 @@ input,select,textarea{font-family:inherit}
 .series-name{font-size:16.5px;font-weight:700;color:var(--navy2)}
 .series-note{font-size:12px;color:var(--muted);margin-top:2px}
 
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;padding-bottom:20px}
-.pcard{border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:.2s}
-.pcard.qty-active{border-color:var(--gold2);background:linear-gradient(180deg,rgba(246,198,91,.06),transparent)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:18px;padding-bottom:20px}
+.pcard{border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:.25s;background:#fff;box-shadow:0 1px 3px rgba(14,31,56,.04)}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(14,31,56,.1);border-color:rgba(232,169,42,.4)}
+.pcard.qty-active{border-color:var(--gold2);box-shadow:0 8px 22px rgba(232,169,42,.18)}
+.pcard.qty-active .pcard-body{background:linear-gradient(180deg,rgba(246,198,91,.08),transparent 60%)}
+.pcard-img{position:relative;width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);overflow:hidden}
+.pcard-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.pcard:hover .pcard-img img{transform:scale(1.06)}
+.pcard-img-fallback{display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:40px;color:rgba(246,198,91,.85)}
+.pcard-img.img-fallback img{display:none}
+.pcard-img.img-fallback .pcard-img-fallback{display:flex}
+.pcard-badge{position:absolute;top:10px;right:10px;background:var(--warn);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:50px;letter-spacing:.03em;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pcard-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
 .pcard-tag{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--gold2);text-transform:uppercase}
 .pcard-name{font-size:14.5px;font-weight:700;color:var(--navy2);line-height:1.4;min-height:38px}
 .pcard-items{font-size:11.3px;color:var(--muted);list-style:none;line-height:1.7}
 .pcard-items li{padding-left:12px;position:relative}
 .pcard-items li::before{content:'·';position:absolute;left:0;color:var(--gold2);font-weight:700}
-.pcard-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:10px}
+.pcard-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px dashed var(--line)}
 .pcard-price{font-family:'Noto Serif TC',serif;font-weight:700;color:var(--gold2);font-size:16px}
 .pcard-orig{font-size:10.5px;color:var(--muted);text-decoration:line-through;margin-left:4px}
 .qty-box{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -161,7 +181,7 @@ input,select,textarea{font-family:inherit}
 #quoteSheet{background:#fff;width:794px;min-height:1123px;margin:0 auto;padding:44px 50px;font-size:12px;color:#1a1a2e}
 .q-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0e1f38;padding-bottom:16px;margin-bottom:20px}
 .q-brand{display:flex;align-items:center;gap:12px}
-.q-logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#F6C65B,#e8a92a);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif TC',serif;font-weight:700;color:#0e1f38;font-size:19px}
+.q-logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#F6C65B,#e8a92a);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif TC',serif;font-weight:700;color:#0e1f38;font-size:19px;overflow:hidden}
 .q-brand-name{font-family:'Noto Serif TC',serif;font-size:17px;color:#0e1f38}
 .q-brand-sub{font-size:10.5px;color:#5a5a7a}
 .q-meta{text-align:right;font-size:11px;color:#5a5a7a}
@@ -208,7 +228,9 @@ table.q-table td.num,table.q-table th.num{text-align:right}
 
 <div class="top">
   <div class="top-brand">
-    <div class="top-logo">TT</div>
+    <div class="top-logo" id="topLogo">
+      <img src="" alt="新北市慈泰庇護工場" id="topLogoImg" onerror="document.getElementById('topLogo').innerHTML='TT'">
+    </div>
     <div>
       <div class="top-title">公益禮盒智慧估價中心</div>
       <div class="top-sub">TZU-TAI Bremen｜新北市慈泰庇護工場</div>
@@ -222,15 +244,26 @@ table.q-table td.num,table.q-table th.num{text-align:right}
   <!-- LEFT: PRODUCTS -->
   <div>
     <div class="intro">
-      <h2>快速試算，取得正式估價單</h2>
-      <p>挑選您需要的禮盒與數量，系統會即時計算折扣、運費與總價；填寫聯絡資訊後即可下載 A4 估價單 PDF，或直接以 Email 寄送給客戶與慈泰庇護工場。<br>
-      <b>本工具僅提供試算與估價，正式訂購仍需回傳簽名／用印之估價單，或至官網完成流程。</b></p>
-      <div class="steps">
-        <span class="step">① 選擇商品</span>
-        <span class="step">② 系統試算</span>
-        <span class="step">③ 填寫聯絡資訊</span>
-        <span class="step">④ 下載 PDF</span>
-        <span class="step">⑤ Email 客戶與慈泰</span>
+      <div class="intro-hero" id="introHero">
+        <div class="intro-hero-content">
+          <h2>快速試算，取得正式估價單</h2>
+          <p>挑選您需要的禮盒，讓每一份甜蜜都成為溫暖的力量</p>
+        </div>
+        <div class="intro-mascots" id="introMascots">
+          <img src="" alt="" id="introDog" onerror="this.remove()">
+          <img src="" alt="" id="introCat" onerror="this.remove()">
+        </div>
+      </div>
+      <div class="intro-body">
+        <p>挑選您需要的禮盒與數量，系統會即時計算折扣、運費與總價；填寫聯絡資訊後即可下載 A4 估價單 PDF，或直接以 Email 寄送給客戶與慈泰庇護工場。<br>
+        <b>本工具僅提供試算與估價，正式訂購仍需回傳簽名／用印之估價單，或至官網完成流程。</b></p>
+        <div class="steps">
+          <span class="step">① 選擇商品</span>
+          <span class="step">② 系統試算</span>
+          <span class="step">③ 填寫聯絡資訊</span>
+          <span class="step">④ 下載 PDF</span>
+          <span class="step">⑤ Email 客戶與慈泰</span>
+        </div>
       </div>
     </div>
 
@@ -361,67 +394,79 @@ const BRAND = {
   site: "https://eshop.syinlu.org.tw/main/visit/Bulk-purchase"
 };
 
+/* ============ IMAGE CONFIG (GitHub repo: nickhero2001-source/estimate) ============ */
+const IMG_BASE = "https://raw.githubusercontent.com/nickhero2001-source/estimate/main/images/";
+function imgUrl(filename){ return IMG_BASE + encodeURIComponent(filename); }
+const BRAND_IMG = {
+  logo: imgUrl("新北市庇護工場logo.webp"),
+  logoAlt: imgUrl("心路LOGO.webp"),
+  hero: imgUrl("故事背景.webp"),
+  visual: imgUrl("視覺.webp"),
+  dog: imgUrl("狗.webp"),
+  cat: imgUrl("貓.webp"),
+};
+
 /* ============ PRODUCT DATA (取自 Index(51) 一頁式網站商品內容) ============ */
 const SERIES = [
   {
     icon:"🌕", name:"花好月圓．伴（中秋限定）", note:"攜手日禾春．可提式禮盒．數量有限",
     items:[
-      {id:"p01", name:"花好月圓．伴（單盒款）", tag:"中秋限定・單盒款", price:435, orig:460, items:["蛋黃酥 2入","手工餅乾 5入","短支蛋捲 4入"]},
-      {id:"p02", name:"花好月圓．伴（綜合大款）", tag:"中秋限定・綜合大款", price:835, orig:880, items:["蛋黃酥 2入","手工餅乾 12入","長支蛋捲 2入","短支蛋捲 4入","米葉果果 5入"]},
+      {id:"p01", name:"花好月圓．伴（單盒款）", tag:"中秋限定・單盒款", price:435, orig:460, img:"花好月圓伴單盒款.webp", items:["蛋黃酥 2入","手工餅乾 5入","短支蛋捲 4入"]},
+      {id:"p02", name:"花好月圓．伴（綜合大款）", tag:"中秋限定・綜合大款", price:835, orig:880, img:"花好月圓伴綜合大盒款.webp", items:["蛋黃酥 2入","手工餅乾 12入","長支蛋捲 2入","短支蛋捲 4入","米葉果果 5入"]},
     ]
   },
   {
     icon:"🎶", name:"星空下的不來梅樂手・週年紀念鐵盒", note:"鐵盒典藏，星光設計，珍貴收藏款（口味固定無法挑選）",
     items:[
-      {id:"p03", name:"星空不來梅・綜果款", tag:"鐵盒・單層", price:420, items:["鳳茶酥 2顆（濃茶金萱、伯爵紅烏龍各1）","米葉果果 4片（蜂蜜伯爵、微辣起司各2）","餅乾 5片（蜜香紅茶2、金萱3）"]},
-      {id:"p04", name:"星空不來梅・雙層綜果款", tag:"鐵盒・雙層", price:820, items:["上層：芝麻短蛋捲7入、餅乾5片","下層：鳳茶酥2顆、米葉果果4片、餅乾5片（5口味各1）"]},
-      {id:"p05", name:"星空不來梅・餅乾＋鳳茶酥", tag:"鐵盒・單層・吃茶款", price:420, items:["鳳茶酥 4顆（濃茶金萱、伯爵紅烏龍各2）","餅乾 6片（蜜香紅茶、金萱各3）"]},
+      {id:"p03", name:"星空不來梅・綜果款", tag:"鐵盒・單層", price:420, img:"不來梅單層綜果款.webp", items:["鳳茶酥 2顆（濃茶金萱、伯爵紅烏龍各1）","米葉果果 4片（蜂蜜伯爵、微辣起司各2）","餅乾 5片（蜜香紅茶2、金萱3）"]},
+      {id:"p04", name:"星空不來梅・雙層綜果款", tag:"鐵盒・雙層", price:820, img:"不來梅雙層綜果款.webp", items:["上層：芝麻短蛋捲7入、餅乾5片","下層：鳳茶酥2顆、米葉果果4片、餅乾5片（5口味各1）"]},
+      {id:"p05", name:"星空不來梅・餅乾＋鳳茶酥", tag:"鐵盒・單層・吃茶款", price:420, img:"不來梅餅乾鳳茶酥.webp", items:["鳳茶酥 4顆（濃茶金萱、伯爵紅烏龍各2）","餅乾 6片（蜜香紅茶、金萱各3）"]},
     ]
   },
   {
     icon:"🌙", name:"美好時光・Lovely Time", note:"美好的事物 獻給美好的你",
     items:[
-      {id:"p06", name:"美好時光・單層提盒餅乾蛋捲", tag:"單層提盒", price:399, items:["餅乾 16片（4種口味）","長蛋捲 2支（芝麻、咖啡各1）"]},
+      {id:"p06", name:"美好時光・單層提盒餅乾蛋捲", tag:"單層提盒", price:399, img:"美好時光單層餅乾蛋捲.webp", items:["餅乾 16片（4種口味）","長蛋捲 2支（芝麻、咖啡各1）"]},
     ]
   },
   {
     icon:"🌸", name:"Yumthé 花獻禮盒", note:"滿版花卉插畫，附贈玫瑰舒緩茶",
     items:[
-      {id:"p07", name:"Yumthé 花獻・餅乾款", tag:"花獻・餅乾款", price:890, orig:990, items:["手工餅乾 21片（4種口味×4+1種口味×5）","玫瑰舒緩茶 1盒（3入茶包）"]},
-      {id:"p08", name:"Yumthé 花獻・餅乾蛋捲款", tag:"花獻・餅乾蛋捲款", price:890, orig:990, items:["手工餅乾 13片","長蛋捲 6支（芝麻、咖啡各3）","玫瑰舒緩茶 1盒（3入茶包）"]},
+      {id:"p07", name:"Yumthé 花獻・餅乾款", tag:"花獻・餅乾款", price:890, orig:990, img:"Yumthe花獻餅乾款.webp", items:["手工餅乾 21片（4種口味×4+1種口味×5）","玫瑰舒緩茶 1盒（3入茶包）"]},
+      {id:"p08", name:"Yumthé 花獻・餅乾蛋捲款", tag:"花獻・餅乾蛋捲款", price:890, orig:990, img:"Yumthe花獻餅乾蛋捲款.webp", items:["手工餅乾 13片","長蛋捲 6支（芝麻、咖啡各3）","玫瑰舒緩茶 1盒（3入茶包）"]},
     ]
   },
   {
     icon:"🎼", name:"幸福樂章・小協奏禮盒", note:"可提式紙製禮盒，輕巧好攜帶",
     items:[
-      {id:"p09", name:"小協奏禮盒・餅乾款", tag:"小協奏・餅乾款", price:350, items:["餅乾 16片（8種口味）","可提式紙製禮盒"]},
-      {id:"p10", name:"小協奏禮盒・餅乾蛋捲款", tag:"小協奏・餅乾蛋捲款", price:360, items:["餅乾 8片（4種口味）","短蛋捲 9支（芝麻／咖啡）","可提式紙製禮盒"]},
+      {id:"p09", name:"小協奏禮盒・餅乾款", tag:"小協奏・餅乾款", price:350, img:"小協奏禮盒餅乾款.webp", items:["餅乾 16片（8種口味）","可提式紙製禮盒"]},
+      {id:"p10", name:"小協奏禮盒・餅乾蛋捲款", tag:"小協奏・餅乾蛋捲款", price:360, img:"小協奏禮盒餅乾蛋捲款.webp", items:["餅乾 8片（4種口味）","短蛋捲 9支（芝麻／咖啡）","可提式紙製禮盒"]},
     ]
   },
   {
     icon:"🧩", name:"幸福花磚・捲毛力卡聯名禮盒", note:"紙盒包裝附提袋，雙層／三層可選",
     items:[
-      {id:"p11", name:"幸福花磚・綜合款雙層", tag:"聯名・雙層・綜合款", price:699, items:["上層：短蛋捲10支、桂花烏龍茶1袋","下層：餅乾8片、原味土鳳梨酥2顆、柚香金萱土鳳梨酥1顆"]},
-      {id:"p12", name:"幸福花磚・餅乾款雙層", tag:"聯名・雙層・餅乾款", price:699, items:["上層：短蛋捲10支、桂花烏龍茶1袋","下層：餅乾16片（4口味）"]},
-      {id:"p13", name:"幸福花磚・綜合款三層", tag:"聯名・三層・綜合款", price:940, items:["上層：短蛋捲10支、茶1袋","中層：餅乾8片、鳳梨酥3顆","下層：餅乾16片（4口味）"]},
+      {id:"p11", name:"幸福花磚・綜合款雙層", tag:"聯名・雙層・綜合款", price:699, img:"幸福花磚綜合款雙層.webp", items:["上層：短蛋捲10支、桂花烏龍茶1袋","下層：餅乾8片、原味土鳳梨酥2顆、柚香金萱土鳳梨酥1顆"]},
+      {id:"p12", name:"幸福花磚・餅乾款雙層", tag:"聯名・雙層・餅乾款", price:699, img:"幸福花磚餅乾款雙層.webp", items:["上層：短蛋捲10支、桂花烏龍茶1袋","下層：餅乾16片（4口味）"]},
+      {id:"p13", name:"幸福花磚・綜合款三層", tag:"聯名・三層・綜合款", price:940, img:"幸福花磚三層綜合款.webp", items:["上層：短蛋捲10支、茶1袋","中層：餅乾8片、鳳梨酥3顆","下層：餅乾16片（4口味）"]},
     ]
   },
   {
     icon:"🌳", name:"Happy Together・麵包樹聯名禮盒", note:"療癒插畫，多種組合滿足不同需求",
     items:[
-      {id:"p14", name:"Happy Together・蛋捲餅乾款", tag:"麵包樹・蛋捲餅乾款", price:600, items:["餅乾綜合 12片（6口味）","短蛋捲 16支（芝麻、咖啡各8）"]},
-      {id:"p15", name:"Happy Together・綜合款", tag:"麵包樹・綜合款", price:599, items:["餅乾 12片（6口味）","短蛋捲 8支","土鳳梨酥 4顆（原味、布朗尼各2）"]},
-      {id:"p16", name:"Happy Together・8入土鳳梨酥", tag:"麵包樹・8入鳳梨酥款", price:590, items:["餅乾 12片（6口味）","土鳳梨酥 8顆（原味4、布朗尼4）"]},
-      {id:"p17", name:"一起幸福吧・麵包樹聯名", tag:"麵包樹・一起幸福吧", price:420, items:["餅乾 10片（5口味）","長蛋捲 6支（芝麻、咖啡各3）"]},
+      {id:"p14", name:"Happy Together・蛋捲餅乾款", tag:"麵包樹・蛋捲餅乾款", price:600, img:"HappyTogether蛋捲餅乾款.webp", items:["餅乾綜合 12片（6口味）","短蛋捲 16支（芝麻、咖啡各8）"]},
+      {id:"p15", name:"Happy Together・綜合款", tag:"麵包樹・綜合款", price:599, img:"HappyTogether綜合款.webp", items:["餅乾 12片（6口味）","短蛋捲 8支","土鳳梨酥 4顆（原味、布朗尼各2）"]},
+      {id:"p16", name:"Happy Together・8入土鳳梨酥", tag:"麵包樹・8入鳳梨酥款", price:590, img:"HappyTogether8入鳳梨酥.webp", items:["餅乾 12片（6口味）","土鳳梨酥 8顆（原味4、布朗尼4）"]},
+      {id:"p17", name:"一起幸福吧・麵包樹聯名", tag:"麵包樹・一起幸福吧", price:420, img:"一起幸福吧.webp", items:["餅乾 10片（5口味）","長蛋捲 6支（芝麻、咖啡各3）"]},
     ]
   },
   {
     icon:"💭", name:"美好夢想・許匡匡聯名禮盒", note:"夢幻水藍插畫包裝，多款組合",
     items:[
-      {id:"p18", name:"美好夢想・A款", tag:"許匡匡・A款", price:560, items:["餅乾 16片（4口味各4）","土鳳梨酥 6顆（原味×3、柚香金萱×3）"]},
-      {id:"p19", name:"美好夢想・B款", tag:"許匡匡・B款", price:590, items:["綜合餅乾 8片","土鳳梨酥 6顆","長蛋捲 6支（芝麻、咖啡各3）"]},
-      {id:"p20", name:"美好夢想・C款", tag:"許匡匡・C款", price:630, items:["綜合餅乾 16片（4口味）","長蛋捲 10支（芝麻、咖啡各5）"]},
-      {id:"p21", name:"美好夢想S・餅乾蛋捲組", tag:"許匡匡・S款", price:450, items:["餅乾 15片（5口味）","短蛋捲 9支（芝麻5、咖啡4）"]},
+      {id:"p18", name:"美好夢想・A款", tag:"許匡匡・A款", price:560, img:"美好夢想A款.webp", items:["餅乾 16片（4口味各4）","土鳳梨酥 6顆（原味×3、柚香金萱×3）"]},
+      {id:"p19", name:"美好夢想・B款", tag:"許匡匡・B款", price:590, img:"美好夢想B款.webp", items:["綜合餅乾 8片","土鳳梨酥 6顆","長蛋捲 6支（芝麻、咖啡各3）"]},
+      {id:"p20", name:"美好夢想・C款", tag:"許匡匡・C款", price:630, img:"美好夢想C款.webp", items:["綜合餅乾 16片（4口味）","長蛋捲 10支（芝麻、咖啡各5）"]},
+      {id:"p21", name:"美好夢想S・餅乾蛋捲組", tag:"許匡匡・S款", price:450, img:"美好夢想S款餅乾蛋捲組.webp", items:["餅乾 15片（5口味）","短蛋捲 9支（芝麻5、咖啡4）"]},
     ]
   },
 ];
@@ -455,18 +500,25 @@ function renderSeries(){
       <div class="pgrid">
         ${s.items.map(p => `
           <div class="pcard" id="card-${p.id}">
-            <span class="pcard-tag">${p.tag}</span>
-            <div class="pcard-name">${p.name}</div>
-            <ul class="pcard-items">${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
-            <div class="pcard-foot">
-              <div>
-                <span class="pcard-price">$${p.price}</span>
-                ${p.orig ? `<span class="pcard-orig">原價 $${p.orig}</span>` : ""}
-              </div>
-              <div class="qty-box">
-                <button onclick="changeQty('${p.id}',-1)">−</button>
-                <input type="number" min="0" id="qty-${p.id}" value="0" oninput="setQty('${p.id}', this.value)">
-                <button onclick="changeQty('${p.id}',1)">＋</button>
+            <div class="pcard-img" id="img-${p.id}">
+              ${p.img ? `<img src="${imgUrl(p.img)}" alt="${p.name}" loading="lazy" onerror="document.getElementById('img-${p.id}').classList.add('img-fallback')">` : ""}
+              <div class="pcard-img-fallback">${s.icon}</div>
+              ${p.orig ? `<span class="pcard-badge">優惠中</span>` : ""}
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">${p.tag}</span>
+              <div class="pcard-name">${p.name}</div>
+              <ul class="pcard-items">${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+              <div class="pcard-foot">
+                <div>
+                  <span class="pcard-price">$${p.price}</span>
+                  ${p.orig ? `<span class="pcard-orig">原價 $${p.orig}</span>` : ""}
+                </div>
+                <div class="qty-box">
+                  <button onclick="changeQty('${p.id}',-1)">−</button>
+                  <input type="number" min="0" id="qty-${p.id}" value="0" oninput="setQty('${p.id}', this.value)">
+                  <button onclick="changeQty('${p.id}',1)">＋</button>
+                </div>
               </div>
             </div>
           </div>
@@ -671,7 +723,7 @@ function openQuote(){
   document.getElementById("quoteSheet").innerHTML = `
     <div class="q-head">
       <div class="q-brand">
-        <div class="q-logo">TT</div>
+        <div class="q-logo"><img src="${BRAND_IMG.logo}" alt="logo" style="width:100%;height:100%;object-fit:contain;padding:4px" onerror="this.parentElement.textContent='TT'"></div>
         <div><div class="q-brand-name">${BRAND.name}</div><div class="q-brand-sub">${BRAND.org}</div></div>
       </div>
       <div class="q-meta">
@@ -865,6 +917,17 @@ function toggleGas(){
 }
 
 /* ============ INIT ============ */
+function initBrandImages(){
+  const logoImg = document.getElementById("topLogoImg");
+  if(logoImg) logoImg.src = BRAND_IMG.logo;
+  const hero = document.getElementById("introHero");
+  if(hero) hero.style.backgroundImage = `url('${BRAND_IMG.hero}')`;
+  const dog = document.getElementById("introDog");
+  if(dog) dog.src = BRAND_IMG.dog;
+  const cat = document.getElementById("introCat");
+  if(cat) cat.src = BRAND_IMG.cat;
+}
+initBrandImages();
 renderSeries();
 setMode("general");
 document.getElementById("cShipType").addEventListener("change", renderCart);
