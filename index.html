@@ -852,19 +852,58 @@ async function emailQuote(){
   const email = document.getElementById("cEmail").value.trim();
   const name = document.getElementById("cName").value.trim();
   const total = document.getElementById("sumTotal").textContent;
+  const el = document.getElementById("quoteSheet");
+
+  if(!el || !el.innerHTML.trim()){
+    alert("請先點選「產生 A4 估價單」，系統會先產生報價內容後才能寄送。");
+    return;
+  }
 
   if(GAS_ENDPOINT){
+    const btn = document.getElementById("btnEmail");
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "產生 PDF 並寄送中…";
+
+    // 若預覽視窗目前是關閉狀態，先暫時打開它 — html2canvas 無法擷取 display:none 內的內容
+    const modal = document.getElementById("quoteModal");
+    const wasOpen = modal.classList.contains("open");
+    if(!wasOpen) modal.classList.add("open");
+
     try{
+      await new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
+
+      const opt = {
+        margin: 0,
+        filename: `估價單_${currentQuoteNo || genQuoteNo()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS:true, backgroundColor:"#ffffff" },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // 產生 PDF 的 data URI，取出純 base64 內容以便夾帶寄送
+      const dataUri = await html2pdf().set(opt).from(el).outputPdf('datauristring');
+      const pdfBase64 = dataUri.split(',')[1];
+
       const payload = {
         quoteNo: currentQuoteNo, date: new Date().toISOString(),
         company: name, contact: document.getElementById("cContact").value,
         email, phone: document.getElementById("cPhone").value,
-        amount: total, status: "待確認"
+        amount: total, status: "待確認",
+        pdfBase64, pdfFilename: `估價單_${currentQuoteNo}.pdf`
       };
       await fetch(GAS_ENDPOINT, {method:"POST", mode:"no-cors", body: JSON.stringify(payload)});
-      alert("已送出估價紀錄，系統將自動寄送估價單並記錄於 Google Sheet。");
+      alert("已送出估價紀錄，系統將自動寄送附有 PDF 估價單的通知信，並記錄於 Google Sheet。");
       return;
-    }catch(e){ /* fall through to mailto */ }
+    }catch(e){
+      console.error(e);
+      alert("自動寄送失敗，將改為開啟您的郵件軟體，請手動附上剛才下載的 PDF。");
+      /* fall through to mailto */
+    }finally{
+      btn.disabled = false;
+      btn.textContent = originalText;
+      if(!wasOpen) modal.classList.remove("open");
+    }
   }
 
   const subject = encodeURIComponent(`【估價單 ${currentQuoteNo}】${name} - 公益禮盒估價`);
@@ -876,6 +915,8 @@ async function emailQuote(){
 客戶／公司：${name}
 估價總金額：${total}
 
+此附件為網路估價單，如已決定採購需正式報價單請與工場聯繫取得。
+
 （請下載並附上剛才產生的 PDF 估價單一併寄出）
 
 新北市慈泰庇護工場 敬上`);
@@ -886,7 +927,7 @@ async function emailQuote(){
 /* ============ GAS SCRIPT (説明用，供工程對接) ============ */
 document.getElementById("gasScript").value =
 `/**
- * Google Apps Script - 部署為 Web App，可接收前端 POST 並寫入 Google Sheet + 寄送通知信
+ * Google Apps Script - 部署為 Web App，可接收前端 POST 並寫入 Google Sheet + 寄送通知信（含 PDF 附件）
  * 對應規格書「五、後台」：Google Form + Google Sheet
  * 欄位：估價編號、日期、公司、聯絡人、Email、電話、金額、狀態
  */
@@ -899,14 +940,24 @@ function doPost(e) {
     data.email, data.phone, data.amount, data.status || "待確認"
   ]);
 
-  // 通知客戶與慈泰工場
+  // 通知客戶與慈泰工場，並夾帶前端產生的 PDF 估價單
   const notifyEmail = "2015035@ms.syinlu.org.tw";
-  MailApp.sendEmail({
+  const mailOptions = {};
+  if (data.pdfBase64) {
+    const pdfBlob = Utilities.newBlob(
+      Utilities.base64Decode(data.pdfBase64),
+      "application/pdf",
+      data.pdfFilename || (data.quoteNo + ".pdf")
+    );
+    mailOptions.attachments = [pdfBlob];
+  }
+
+  MailApp.sendEmail(Object.assign({
     to: data.email + "," + notifyEmail,
     subject: "【估價單 " + data.quoteNo + "】" + data.company + " - 公益禮盒估價",
     body: "估價編號：" + data.quoteNo + "\\n金額：" + data.amount +
-          "\\n\\n本信件為系統自動通知，正式估價單請見附件或稍後由專員回覆。"
-  });
+          "\\n\\n此附件為網路估價單，如已決定採購需正式報價單請與工場聯繫取得。"
+  }, mailOptions));
 
   return ContentService.createTextOutput(JSON.stringify({ok:true}))
     .setMimeType(ContentService.MimeType.JSON);
