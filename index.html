@@ -918,12 +918,16 @@ async function emailQuote(){
   const body = encodeURIComponent(
 `您好，
 
+感謝您對新北市慈泰庇護工場的支持與關心！
+
 附上本次禮盒估價資訊：
 估價編號：${currentQuoteNo}
 客戶／公司：${name}
-估價總金額：${total}
+估價金額：${total}
 
-此附件為網路估價單，如已決定採購需正式報價單請與工場聯繫取得。
+這份 PDF 為網路試算估價單，如您已決定採購，歡迎與工場聯繫，我們將盡快為您準備正式報價單。
+
+每一份禮盒，都是庇護工場的夥伴們用心製作而成，謝謝您讓這份心意有機會被更多人看見與品嚐。
 
 （請下載並附上剛才產生的 PDF 估價單一併寄出）
 
@@ -964,8 +968,11 @@ function doPost(e) {
   MailApp.sendEmail(Object.assign({
     to: data.email + "," + notifyEmail,
     subject: "【估價單 " + data.quoteNo + "】" + data.company + " - 公益禮盒估價",
-    body: "估價編號：" + data.quoteNo + "\\n金額：" + data.amount +
-          "\\n\\n此附件為網路估價單，如已決定採購需正式報價單請與工場聯繫取得。"
+    body: "您好，\\n\\n感謝您對新北市慈泰庇護工場的支持與關心！\\n\\n附上本次禮盒估價資訊：\\n估價編號：" + data.quoteNo +
+          "\\n估價金額：" + data.amount +
+          "\\n\\n這份 PDF 為網路試算估價單，如您已決定採購，歡迎與工場聯繫，我們將盡快為您準備正式報價單。" +
+          "\\n\\n每一份禮盒，都是庇護工場的夥伴們用心製作而成，謝謝您讓這份心意有機會被更多人看見與品嚐。" +
+          "\\n\\n新北市慈泰庇護工場 敬上"
   }, mailOptions));
 
   return ContentService.createTextOutput(JSON.stringify({ok:true}))
