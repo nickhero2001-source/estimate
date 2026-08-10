@@ -885,11 +885,18 @@ async function emailQuote(){
       const dataUri = await html2pdf().set(opt).from(el).outputPdf('datauristring');
       const pdfBase64 = dataUri.split(',')[1];
 
+      const {lines} = renderCart();
+      const itemsSummary = lines.map(([id,qty])=>{
+        const p = findProduct(id);
+        return `${p.name} x${qty}（$${(p.price*qty).toLocaleString()}）`;
+      }).join("\n");
+
       const payload = {
         quoteNo: currentQuoteNo, date: new Date().toISOString(),
         company: name, contact: document.getElementById("cContact").value,
         email, phone: document.getElementById("cPhone").value,
         amount: total, status: "待確認",
+        items: itemsSummary,
         pdfBase64, pdfFilename: `估價單_${currentQuoteNo}.pdf`
       };
       await fetch(GAS_ENDPOINT, {method:"POST", mode:"no-cors", body: JSON.stringify(payload)});
@@ -929,7 +936,7 @@ document.getElementById("gasScript").value =
 `/**
  * Google Apps Script - 部署為 Web App，可接收前端 POST 並寫入 Google Sheet + 寄送通知信（含 PDF 附件）
  * 對應規格書「五、後台」：Google Form + Google Sheet
- * 欄位：估價編號、日期、公司、聯絡人、Email、電話、金額、狀態
+ * 欄位：估價編號、日期、公司、聯絡人、Email、電話、金額、商品明細、狀態
  */
 function doPost(e) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("估價紀錄");
@@ -937,7 +944,8 @@ function doPost(e) {
 
   sheet.appendRow([
     data.quoteNo, data.date, data.company, data.contact,
-    data.email, data.phone, data.amount, data.status || "待確認"
+    data.email, data.phone, data.amount, data.items || "",
+    data.status || "待確認"
   ]);
 
   // 通知客戶與慈泰工場，並夾帶前端產生的 PDF 估價單
