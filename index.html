@@ -909,9 +909,13 @@ async function emailQuote(){
       const pdfObj = await html2pdf().set(opt).from(el).toPdf().get('pdf');
       const dataUri = pdfObj.output('datauristring');
       const pdfBase64 = dataUri.split(',')[1];
+      const pdfKb = pdfBase64 ? Math.round(pdfBase64.length * 0.75 / 1024) : 0;
       console.log("PDF base64 產生完成，長度：", pdfBase64 ? pdfBase64.length : 0, "字元（正常應有數萬字元以上，若接近 0 代表擷取失敗）");
       if(!pdfBase64 || pdfBase64.length < 1000){
+        alert(`⚠️ 偵測到 PDF 內容為空（大小約 ${pdfKb} KB），截圖失敗，將改為開啟郵件軟體讓您手動附上 PDF。`);
         throw new Error("PDF 內容為空或過小，可能截圖失敗");
+      } else {
+        alert(`✅ 偵測結果：PDF 已成功產生內容，大小約 ${pdfKb} KB，即將上傳並寄送…`);
       }
 
       const {lines} = renderCart();
