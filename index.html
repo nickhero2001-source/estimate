@@ -882,8 +882,10 @@ async function emailQuote(){
       };
 
       // 產生 PDF 的 data URI，取出純 base64 內容以便夾帶寄送
-      // 注意：必須先 .toPdf() 才能 .output()，否則會產生空白 PDF
-      const dataUri = await html2pdf().set(opt).from(el).toPdf().output('datauristring');
+      // 改用 .get('pdf') 直接取得內部 jsPDF 物件再呼叫其原生 output()，
+      // 避免透過 html2pdf 自身的 output() 包裝時可能發生的時序問題（曾導致附件空白）
+      const pdfObj = await html2pdf().set(opt).from(el).toPdf().get('pdf');
+      const dataUri = pdfObj.output('datauristring');
       const pdfBase64 = dataUri.split(',')[1];
 
       const {lines} = renderCart();
