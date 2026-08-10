@@ -871,7 +871,7 @@ async function emailQuote(){
     if(!wasOpen) modal.classList.add("open");
 
     try{
-      await new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
+      await new Promise(r => requestAnimationFrame(() => setTimeout(r, 150)));
 
       const opt = {
         margin: 0,
@@ -882,7 +882,8 @@ async function emailQuote(){
       };
 
       // 產生 PDF 的 data URI，取出純 base64 內容以便夾帶寄送
-      const dataUri = await html2pdf().set(opt).from(el).outputPdf('datauristring');
+      // 注意：必須先 .toPdf() 才能 .output()，否則會產生空白 PDF
+      const dataUri = await html2pdf().set(opt).from(el).toPdf().output('datauristring');
       const pdfBase64 = dataUri.split(',')[1];
 
       const {lines} = renderCart();
